@@ -1,0 +1,51 @@
+<html>
+
+<body>
+
+<div class="categorydiv">
+<h1>Categories</h1>
+
+
+{% for i in categorylist %}
+
+<div>
+
+<a href='{{url_for('getItems', category_id = i.id) }}'>{{i.name}}</a>
+
+</br>
+
+<!--<p>{{i.name}}</p>-->
+
+
+</div>
+
+
+{% endfor %}
+</div>
+
+
+
+<div class="itemdiv">
+<h1>{{category.name}}</h1>
+
+<div>
+	<a href='{{url_for('newItems', category_id = category_id) }}'>Add Item</a>
+</div>
+
+{% for i in items %}
+
+<div class="list">
+
+<a href='{{url_for('getDescription', category_id = category_id ,item_id=i.id) }}'>{{i.name,category.id,i.id}}</a>
+<!--<p>{{i.name}}</p>-->
+
+
+</div>
+
+
+{% endfor %}
+</div>
+
+</body>
+
+</html>

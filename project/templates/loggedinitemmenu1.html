@@ -1,0 +1,67 @@
+<html>
+<head>
+
+  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+
+<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+
+
+</head>
+
+<body>
+<!-- GOOGLE PLUS SIGN IN-->
+<div>
+  <a href= '{{url_for('gdisconnect')}}'>Signout</a>
+</div>
+          
+          
+
+<div class="categorydiv">
+<h1>Categories</h1>
+
+
+{% for i in category %}
+
+<div>
+	<a href= '{{url_for('getItems',category_id=i.id)}}'>{{i.name}}</a>
+<!--<a href="javascript:somefunction({{i.id}});"  >{{i.name}}</a>-->
+</br>
+
+<!--<p>{{i.name}}</p>-->
+
+
+</div>
+
+
+{% endfor %}
+</div>
+
+
+
+<div class="itemdiv">
+<h1>Latest Items</h1>
+
+
+{% for i in items %}
+
+<div class="list">
+
+<a href= '{{url_for('getDescription',category_id=i.category_id,item_id=i.id)}}'>{{i.name}}</a>
+
+
+</div>
+
+
+{% endfor %}
+</div>
+<script>
+
+
+
+</body>
+
+</html>
