@@ -57,7 +57,9 @@ def gconnect():
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
     h = httplib2.Http()
-    result = json.loads(h.request(url, 'GET')[1])
+    req = h.request(url, 'GET')[1]
+    req_json = req.decode('utf8').replace("'", '"')
+    result = json.loads(req_json)
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
@@ -88,7 +90,10 @@ def gconnect():
         'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
         % stored_access_token)
     stored_h = httplib2.Http()
-    stored_result = json.loads(stored_h.request(stored_url, 'GET')[1])
+
+    req = stored_h.request(stored_url, 'GET')[1]
+    req_json = req.decode('utf8').replace("'", '"')
+    stored_result = json.loads(req_json)
 
     if (stored_access_token is not None and gplus_id == stored_gplus_id and
             stored_result.get('error') is None):
