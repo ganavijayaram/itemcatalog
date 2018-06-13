@@ -34,7 +34,7 @@ Seperate instructions are provided to get GConnect working also.
 6. The app imports requests which is not on this vm. Run sudo pip install requests
 7. Setup application database `project/database_setupwithusers.py`
 8. *Insert fake data `project/databasewithusers.py`
-9. Run application using ``project/projectwithusers.py`
+9. Run application using `project/projectwithusers.py`
 10. Access the application locally using http://localhost:5000
 
 *Optional step(s)
