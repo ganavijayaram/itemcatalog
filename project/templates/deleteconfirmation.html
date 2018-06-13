@@ -1,18 +1,20 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Delete Page</title>
+</head>
 <body>
-<h1> Are you sure you want to delete {{item.name}}? </h1>
+	<div>
+	  <a href= "{{url_for('gdisconnect')}}">Signout</a>
+	</div>
 
-<form action="{{ url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}" method = 'post'>
+	<h1> Are you sure you want to delete {{item.name}}? </h1>
 
-<input type='submit', value = 'Delete'>
+	<form action="{{ url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}" method = 'post'>
+		<input type="submit">
+	</form>
 
+	<a href = "{{ url_for('loggedincategoryMenu', category_id = item.category_id)}}"> Cancel </a>
 
-
-
-</form>
-
-<a href = "{{ url_for('commoncategoryMenu', category_id = item.category_id)}}"> Cancel </a>
 </body>
-
 </html>

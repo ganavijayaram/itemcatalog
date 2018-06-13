@@ -1,17 +1,22 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>New Item</title>
+</head>
 <body>
-<h1> New  Item </h1>
+	<div>
+	  <a href= "{{url_for('gdisconnect')}}">Signout</a>
+	</div>
 
-<form action="{{url_for('newItems', category_id=category_id)}}" method = 'POST'>
+	<h1> New  Item </h1>
 
-<p>Name:</p>
+	<form action="{{url_for('newItems', category_id=category_id)}}" method = 'POST'>
+		<p>Name:</p>
+		<input type='text' size='30' name='name'>
+		<input type='text' size='300' name='description'>
+		<input type='submit' value='Create'>
+	</form>
 
-<input type='text' size='30' name='name'>
-<input type='text' size='300' name='description'>
-
-<input type='submit' value='Create'>
-
-</form>
-<a href= '{{url_for('commoncategoryMenu') }}'>Cancel</a>
-
+	<a href= "{{url_for('loggedincategoryMenu') }}">Cancel</a>
 </body>
+</html>

@@ -1,104 +1,85 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
+  <title>Item Menu</title>
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+</head>
+<body>
+  <!-- GOOGLE PLUS SIGN IN-->
+  <div id="signinButton">
+     <span class="g-signin"
+       data-scope="openid email"
+       data-clientid="624332865864-gcmku0auilbcko1patu8vjdcl97h43rm.apps.googleusercontent.com"
+       data-redirecturi="postmessage"
+       data-accesstype="offline"
+       data-cookiepolicy="single_host_origin"
+       data-callback="signInCallback"
+       data-approvalprompt="force">
+     </span>       
+   </div>
+            
+  <div id="result"></div>
+
+  <div class="categorydiv">
+    <h1>Categories</h1>
+
+
+    {% for i in category %}
+
+    <div>
+      <a href= "{{url_for('getItems',category_id=i.id)}}">{{i.name}}</a>
+
+    <br>
+
+    </div>
+
+
+    {% endfor %}
+  </div>
+
+  <div class="itemdiv">
+    <h1>Latest Items</h1>
+
+    {% for i in items %}
+
+    <div class="list">
+     <a href= "{{url_for('getDescription',category_id=i.category_id,item_id=i.id)}}">{{i.name}}</a>
+    </div>
+
+    {% endfor %}
+  </div>
+  <script>
+  function signInCallback(authResult) {
+    if (authResult['code']) {
+      // Hide the sign-in button now that the user is authorized
+      $('#signinButton').attr('style', 'display: none');
+      // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+      $.ajax({
+        type: 'POST',
+        url: '/gconnect?state={{STATE}}',
+        processData: false,
+        data: authResult['code'],
+        contentType: 'application/octet-stream; charset=utf-8',
+        success: function(result) {
+          // Handle or verify the server response if necessary.
+          if (result) {
+            $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+           setTimeout(function() {
+            window.location.href = "/category/loggedin";
+           }, 4000);
+            
+        } else if (authResult['error']) {
+      console.log('There was an error: ' + authResult['error']);
+    } else {
+          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+           }
+        }
+        
+    }); } }
   </script>
 
-<script src="//apis.google.com/js/platform.js?onload=start"> </script>
-
-<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
-
-
-</head>
-
-<body>
-<!-- GOOGLE PLUS SIGN IN-->
-
-          
-          <div id="signinButton">
-          <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="624332865864-gcmku0auilbcko1patu8vjdcl97h43rm.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-          </span>
-        </div>
-
-<div id="result"></div>
-
-<div class="categorydiv">
-<h1>Categories</h1>
-
-
-{% for i in category %}
-
-<div>
-	<a href= '{{url_for('getItems',category_id=i.id)}}'>{{i.name}}</a>
-<!--<a href="javascript:somefunction({{i.id}});"  >{{i.name}}</a>-->
-</br>
-
-<!--<p>{{i.name}}</p>-->
-
-
-</div>
-
-
-{% endfor %}
-</div>
-
-
-
-<div class="itemdiv">
-<h1>Latest Items</h1>
-
-
-{% for i in items %}
-
-<div class="list">
-
-
-<a href= '{{url_for('getDescription',category_id=i.category_id,item_id=i.id)}}'>{{i.name}}</a>
-
-</div>
-
-
-{% endfor %}
-</div>
-<script>
-function signInCallback(authResult) {
-  if (authResult['code']) {
-    // Hide the sign-in button now that the user is authorized
-    $('#signinButton').attr('style', 'display: none');
-    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
-    $.ajax({
-      type: 'POST',
-      url: '/gconnect?state={{STATE}}',
-      processData: false,
-      data: authResult['code'],
-      contentType: 'application/octet-stream; charset=utf-8',
-      success: function(result) {
-        // Handle or verify the server response if necessary.
-        if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
-         setTimeout(function() {
-          window.location.href = "/category/loggedin";
-         }, 4000);
-          
-      } else if (authResult['error']) {
-    console.log('There was an error: ' + authResult['error']);
-  } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-         }
-      }
-      
-  }); } }
-</script>
-
-
 </body>
-
 </html>

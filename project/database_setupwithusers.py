@@ -24,7 +24,7 @@ class Category(Base):
     name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    
+
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -32,7 +32,6 @@ class Category(Base):
             'name': self.name,
             'id': self.id,
         }
-    
 
 
 class Item(Base):
@@ -45,7 +44,7 @@ class Item(Base):
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    
+
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
@@ -53,12 +52,11 @@ class Item(Base):
             'name': self.name,
             'description': self.description,
             'id': self.id,
-            'category name' : self.category.name,
+            'category name': self.category.name,
         }
-    
 
 
-engine = create_engine('sqlite:///itemcatelogwithusers.db')
+engine = create_engine('sqlite:///itemcatelogwithusers1.db')
 
 
 Base.metadata.create_all(engine)

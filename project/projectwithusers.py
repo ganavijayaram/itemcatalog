@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for,jsonify,flash
+from flask import Flask, render_template
+from flask import request, redirect, url_for, jsonify, flash
 from itertools import zip_longest
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
@@ -17,7 +18,8 @@ from flask import make_response
 import requests
 from functools import wraps
 
-engine = create_engine('sqlite:///itemcatelogwithusers.db',connect_args={'check_same_thread':False})
+engine = create_engine('sqlite:///itemcatelogwithusers1.db',
+                       connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -27,7 +29,6 @@ app = Flask(__name__)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog with users Application"
-
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -95,7 +96,6 @@ def gconnect():
             json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
-
     # Store the access token in the session for later use.
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
@@ -113,8 +113,15 @@ def gconnect():
 
     # See if user exists, if it doesn't make a new one
     user_id = getUserID(login_session['email'])
-    if not user_id:
-        user_id = creatUser(login_session)
+    if user_id is None:
+        newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+
+        session.add(newUser)
+        session.commit()
+        user = session.query(User).filter_by(email=login_session[
+                'email']).one()
+        user_id = user.id
     login_session['user_id'] = user_id
 
     output = ''
@@ -129,9 +136,8 @@ def gconnect():
     print("done!")
     return output
 
+
 # DISCONNECT - Revoke a current user's token and reset their login_session
-
-
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
@@ -169,17 +175,6 @@ def gdisconnect():
 
 
 # User Helper Functions
-
-
-def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
-
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
@@ -187,6 +182,9 @@ def getUserInfo(user_id):
 
 def getUserID(email):
     try:
+        save = open('details.txt', 'a')
+        save.write(email)
+        save.close()
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
@@ -200,172 +198,111 @@ def getCatalog():
     Category = []
     if categories:
         for cat in categories:
-            items = session.query(Item).filter_by(category_id=cat.category_id).all()
+            items = session.query(Item).filter_by(
+                category_id=cat.category_id).all()
             Category.append(
-                {'Item': [i.serialize for i in items], 'name': cat.category_id})
+                {'Item': [i.serialize for i in items],
+                 'name': cat.category_id})
     return jsonify(Category=Category)
-
-
-#@app.route('/category/JSON')
-#def catelogJSON():
-    #session = DBSession()
-    #category = session.query(Category).all()
-    #for i in category:
-        #result1 += jsonify(Category=[i.serialize])
-    #return result1
-        #return jsonify(Category=[i.serialize])
-        #itemlist = session.query(Item).filter_by(id=i.id).all()
-        #return jsonify(Items=[
-            #i.serialize for i in itemlist ])
-    #output = []
-    #for i in category:
-        #itemlist = session.query(Item).filter_by(id=i.id).all()
-        #output += itemlist
-        #return jsonify(Items=[i.serialize for i in itemlist])
-
-#@app.route('/category/<int:category_id>/menu/JSON')
-#def categoryMenuJSON(category_id):
-    #session = DBSession()
-    #category = session.query(Category).filter_by(id=category_id).one()
-    #items = session.query(Item).filter_by(
-        #category_id=category_id).all()
-    #d = dict(items)
-    #output=""
-    #for i in items:
-        #output += items.name
-    #return d
-    #return jsonify(Items=[i.serialize for i in items])
 
 
 # ADD JSON ENDPOINT HERE
 @app.route('/category/<int:category_id>/menu/<int:item_id>/JSON')
 def ItemJSON(category_id, item_id):
-    #session = DBSession()
     Itemss = session.query(Item).filter_by(id=item_id).one()
     return jsonify(Item=Itemss.serialize)
+
 
 @app.route('/')
 @app.route('/category/')
 def commoncategoryMenu():
-    #session = DBSession()
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for _ in range(32))
     login_session['state'] = state
     category = session.query(Category).all()
     items = session.query(Item).order_by(Item.id.desc()).limit(12).all()
+    if 'username' not in login_session:
+        return render_template(
+            'itemmenu1.html', category=category, items=items, STATE=state)
     return render_template(
-        'itemmenu1.html', category=category, items=items, STATE=state)
+        'loggedinitemmenu1.html', category=category, items=items)
+
 
 @app.route('/category/loggedin')
 def loggedincategoryMenu():
-    #session = DBSession()
     if 'username' not in login_session:
         return redirect('/category')
     user_id = login_session['user_id']
     category = session.query(Category).all()
     items = session.query(Item).order_by(Item.id.desc()).limit(12).all()
-    #save = open('details.txt','a')
-    #save.write(str()+"loggedincategoryMenu")
-    #save.close()
     return render_template(
         'loggedinitemmenu1.html', category=category, items=items)
 
+
 @app.route('/category/<int:category_id>/')
 def getItems(category_id):
-    #session = DBSession()
-    #output = "hey"
-    #return output
     categorylist = session.query(Category).all()
-    category=session.query(Category).filter_by(id=category_id).first()
-    items= session.query(Item).filter_by(category_id=category_id).all()
-     #check if user has logged in then render template with add item
+    category = session.query(Category).filter_by(id=category_id).first()
+    items = session.query(Item).filter_by(category_id=category_id).all()
+    # check if user has logged in then render template with add item
     if login_session.get('access_token') is not None:
-        #save = open('details.txt','a')
-        #save.write(str(login_session.get('access_token'))+"getitemsif")
-        #save.close()
         return render_template(
-       'additem.html', category=category, items=items,category_id=category_id,categorylist = categorylist)
+         'additem.html', category=category,
+         items=items, category_id=category_id, categorylist=categorylist)
     else:
-        return render_template(
-        'itemenu2.html', category=category, items=items,category_id=category_id,categorylist = categorylist)
+        return render_template('itemenu2.html',
+                               category=category,
+                               items=items, category_id=category_id,
+                               categorylist=categorylist,
+                               STATE=login_session.get('state'))
+
 
 @app.route('/category/<int:category_id>/<int:item_id>/')
-def getDescription(category_id,item_id):
+def getDescription(category_id, item_id):
     session = DBSession()
-    #output = "hey"
-    #return output
-    #categorylist = session.query(Category).all()
-    #category=session.query(Category).filter_by(id=category_id).first()
-    #items= session.query(Item).filter_by(category_id=category_id).all()
     itemdesc = session.query(Item).filter_by(id=item_id).one()
-    #output = ""
-    #for i in itemdesc:
-        #output += i.description
-    #return output
-    #save = open('detail.txt','a')
-    #save.write(str(login_session.get('email')))
-    #save.close()
-    
-    if login_session.get('email') is not None :
-        x=str(login_session.get('email'))
+    if 'username' not in login_session:
+        signedin = "no"
+    else:
+        signedin = "yes"
+    if login_session.get('email') is not None:
+        x = str(login_session.get('email'))
         category = session.query(Category).filter_by(id=category_id).one()
-        getuserid=session.query(User).filter_by(email=x).one()
-        #save = open('detail.txt','a')
-        #save.write(str(getuserid.id))
-        #save.close()
-        descwithoptions = session.query(Item).filter_by(id=item_id,user_id=getuserid.id).first()
-        save = open('detail.txt','a')
-        #save.write(descwithoptions.name+" before")
-        save.close()
+        getuserid = session.query(User).filter_by(email=x).one()
+        descwithoptions = session.query(Item).filter_by(
+            id=item_id, user_id=getuserid.id).first()
         if descwithoptions is not None:
             return render_template(
-            'descforusers.html', listt=descwithoptions,category_id=category_id,item_id=item_id)
-            
+                'descforusers.html',
+                listt=descwithoptions,
+                category_id=category_id, item_id=item_id)
+
         else:
-            #save = open('detail.txt','a')
-            #save.write(descwithoptions.name+" else")
-            #save.close()
-            save = open('detail.txt','a')
-            #save.write(descwithoptions+" if")
-            save.close()
             return render_template(
-            'itemdesc.html', listt=itemdesc)
+                'itemdesc.html', listt=itemdesc, signedin=signedin,
+                STATE=login_session.get('state'))
     else:
         return render_template(
-        'itemdesc.html', listt=itemdesc,category_id=category_id,item_id=item_id)
+            'itemdesc.html', listt=itemdesc,
+            category_id=category_id, item_id=item_id, signedin=signedin,
+            STATE=login_session.get('state'))
 
-#@app.route('/category/<int:category_id>/menu')           
-#def categoryMenu(category_id):
-    #session = DBSession()
-    #category = session.query(Category).filter_by(id=category_id).one()
-    #items = session.query(Item).filter_by(category_id=category_id).all()
-    #return render_template(
-        #'itemmenu.html', category=category, items=items)
-
-#@app.route('/category/<int:category_id>/new', methods=[ 'POST'])
-#def newItemtemplate(category_id):
-    #session = DBSession()
-    #if request.method == 'POST':
-        #return render_template('newitem.html', category_id=category_id)
 
 @app.route('/category/<int:category_id>/new', methods=['GET', 'POST'])
 def newItems(category_id):
-    #session = DBSession()
     if 'username' not in login_session:
         return redirect('/category')
     if request.method == 'POST':
-        #save = open('detail.txt','a')
-        #save.write(str(login_session['user_id']))
-        #save.close()
         newItem = Item(name=request.form['name'], description=request.form[
-                           'description'], category_id=category_id,user_id=login_session['user_id'])
-        
+                  'description'],
+                  category_id=category_id,
+                  user_id=login_session['user_id'])
+
         session.add(newItem)
         session.commit()
-        return redirect(url_for('commoncategoryMenu', category_id=category_id))
+        return redirect(url_for('loggedincategoryMenu',
+                                category_id=category_id))
     else:
-        save = open('detail.txt','a')
-        save.write("gett method")
-        save.close()
         return render_template('newitem.html', category_id=category_id)
 
 
@@ -374,7 +311,6 @@ def newItems(category_id):
 def editItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/category')
-    #session = DBSession()
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id).one()
@@ -384,24 +320,26 @@ def editItem(category_id, item_id):
             editedItem.name = request.form['name']
         session.add(editedItem)
         session.commit()
-        return redirect(url_for('commoncategoryMenu', category_id = category_id))
+        return redirect(url_for('loggedincategoryMenu',
+                                category_id=category_id))
     else:
         return render_template(
-            'edititem.html', category_id=category_id, item_id=item_id, item=editedItem)
+            'edititem.html', category_id=category_id,
+            item_id=item_id, item=editedItem)
 
 
 # DELETE MENU ITEM SOLUTION
 @app.route('/category/<int:category_id>/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
-    #session = DBSession()
     if 'username' not in login_session:
         return redirect('/login')
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
-        return redirect(url_for('commoncategoryMenu', category_id=category_id))
+        return redirect(url_for('loggedincategoryMenu',
+                                category_id=category_id))
     else:
         return render_template('deleteconfirmation.html', item=itemToDelete)
 
