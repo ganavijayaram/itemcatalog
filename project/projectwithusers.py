@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, app
+from datetime import timedelta
 from flask import request, redirect, url_for, jsonify, flash
 from itertools import zip_longest
 from sqlalchemy import create_engine, asc
@@ -187,9 +188,6 @@ def getUserInfo(user_id):
 
 def getUserID(email):
     try:
-        save = open('details.txt', 'a')
-        save.write(email)
-        save.close()
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
@@ -351,5 +349,7 @@ def deleteItem(category_id, item_id):
 
 if __name__ == '__main__':
     app.secret_key = 'FN8VwhXdsxtif3DwRceZCpeR'
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=5)
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
