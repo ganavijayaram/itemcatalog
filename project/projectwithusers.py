@@ -316,7 +316,10 @@ def editItem(category_id, item_id):
         return redirect('/category')
     if 'username' not in login_session:
         return redirect('/login')
+    uid = str(login_session.get('user_id'))
     editedItem = session.query(Item).filter_by(id=item_id).one()
+    if uid != editedItem.user_id:
+        return redirect('/category')
     if request.method == 'POST':
         if request.form['name']:
             editedItem.description = request.form['description']
@@ -337,7 +340,10 @@ def editItem(category_id, item_id):
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
+    uid = str(login_session.get('user_id'))
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
+    if uid != itemToDelete.user_id:
+        return redirect('/category')
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
