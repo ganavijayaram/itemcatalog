@@ -318,8 +318,6 @@ def editItem(category_id, item_id):
         return redirect('/login')
     uid = str(login_session.get('user_id'))
     editedItem = session.query(Item).filter_by(id=item_id).one()
-    if uid != editedItem.user_id:
-        return redirect('/category')
     if request.method == 'POST':
         if request.form['name']:
             editedItem.description = request.form['description']
@@ -329,6 +327,8 @@ def editItem(category_id, item_id):
         return redirect(url_for('loggedincategoryMenu',
                                 category_id=category_id))
     else:
+        if str(uid) != str(editedItem.user_id):
+            return redirect('/category')
         return render_template(
             'edititem.html', category_id=category_id,
             item_id=item_id, item=editedItem)
@@ -339,17 +339,19 @@ def editItem(category_id, item_id):
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
+        return redirect('/category')
+    if 'username' not in login_session:
         return redirect('/login')
     uid = str(login_session.get('user_id'))
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
-    if uid != itemToDelete.user_id:
-        return redirect('/category')
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
         return redirect(url_for('loggedincategoryMenu',
                                 category_id=category_id))
     else:
+        if str(uid) != str(itemToDelete.user_id):
+            return redirect('/category')
         return render_template('deleteconfirmation.html', item=itemToDelete)
 
 
