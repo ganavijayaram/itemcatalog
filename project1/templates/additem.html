@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Adding Item</title>
+</head>
+<body>
+	<div>
+	  <a href= '{{url_for('gdisconnect')}}'>Signout</a>
+	</div>
+	<div class="categorydiv">
+		<h1>Categories</h1>
+		{% for i in categorylist %}
+
+		<div>
+			<a href="{{url_for('getItems', category_id = i.id) }}">{{i.name}}</a>
+			<br>
+		</div>
+
+		{% endfor %}
+	</div>
+
+	<div class="itemdiv">
+		<h1>{{category.name}}</h1>
+
+		<div>
+			<a href="{{url_for('newItems', category_id = category_id) }}">Add Item</a>
+		</div>
+
+		{% for i in items %}
+
+		<div class="list">
+			<a href="{{url_for('getDescription', category_id = category_id ,item_id=i.id) }}">{{i.name,category.id,i.id}}</a>
+		</div>
+
+		{% endfor %}
+	</div>
+
+</body>
+</html>

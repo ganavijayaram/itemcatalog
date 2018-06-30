@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Edit Item</title>
+</head>
+<body>
+	<div>
+	  <a href= "{{url_for('gdisconnect')}}">Signout</a>
+	</div>
+
+	<form action= "{{url_for('editItem', category_id = category_id, item_id=item.id)}}" method = 'POST'>
+		<p>Name:</p>
+		<input type = 'text' size='30' name = 'name' placeholder = '{{item.name}}'>
+		<input type = 'text' size='300' name = 'description' placeholder = '{{item.description}}'>
+		<input type='submit' value='Edit'>
+	</form>
+
+	<a href= "{{url_for('loggedincategoryMenu', category_id= item.category_id)}}">Cancel</a>
+</body>
+</html>
