@@ -19,7 +19,7 @@ from flask import make_response
 import requests
 from functools import wraps
 
-engine = create_engine('sqlite:///itemcatelogwithusers1.db',
+engine = create_engine('postgresql://catalog:password@localhost/catalog',
                        connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 
