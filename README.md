@@ -1,4 +1,4 @@
-# Udacity - Linux Server Configuration Project
+# Linux Server Configuration Project
 
 ## About
 
@@ -22,8 +22,7 @@ To generate a key pair, run the following command:
    $ ssh-keygen
    ```
 
-When it asks to enter a passphrase, you may either leave it empty or enter some passphrase. A passphrase adds an additional layer of security to prevent unauthorized users from logging in.
-
+When it asks to enter a passphrase, you may either leave it empty or enter some passphrase.
 
 You now have a public and private key that you can use to authenticate. The public key is called `udacity_project.pub` and the corresponding private key is called `udacity_project`. The key pair is stored inside the `~/.ssh/` directory.
 
