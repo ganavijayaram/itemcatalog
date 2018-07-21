@@ -4,7 +4,7 @@ from flask import request, redirect, url_for, jsonify, flash
 from itertools import zip_longest
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setupwithusers import Base, Category, Item, User
+from .database_setupwithusers import Base, Category, Item, User
 
 from flask import session as login_session
 import random
