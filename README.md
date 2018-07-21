@@ -1,26 +1,21 @@
-
 # Udacity - Linux Server Configuration Project
-
-An Udacity Full Stack Web Developer II Nanodegree Project.
 
 ## About
 
-In this project, I have set up an Ubuntu 18.04 image on a DigitalOcean droplet. The technical details of the server as well as the steps that have been taken to set it up can be found in the succeeding sections.
+This tutorial will guide you through the steps to take a baseline installation of a Linux server and prepare it to host your Web applications.
 
-###  About the Project
+### Technical Information About the Project
 
 - **Server IP Address:** 206.189.46.108
 - **SSH server access port:** 2200
 - **SSH login username:** grader
-- **Application URL:** http://206.189.46.108.xip.io/
-
+- **Application URL:** http://206.189.46.108.xip.io
 
 ## Steps to Set up the Server
 
 ### 1. Creating the RSA Key Pair
 
-On your local machine, you will first have to set up the public and private key pair. This key pair will be used to authenticate yourself while securely logging in to the server via SSH. The private key will be kept with you in your local machine, and the public key will be stored in the server.
-
+On your local machine, you will first have to set up the public and private key pair. 
 To generate a key pair, run the following command:
 
    ```console
@@ -29,8 +24,6 @@ To generate a key pair, run the following command:
 
 When it asks to enter a passphrase, you may either leave it empty or enter some passphrase. A passphrase adds an additional layer of security to prevent unauthorized users from logging in.
 
-
-```
 
 You now have a public and private key that you can use to authenticate. The public key is called `udacity_project.pub` and the corresponding private key is called `udacity_project`. The key pair is stored inside the `~/.ssh/` directory.
 
@@ -46,7 +39,6 @@ You now have a public and private key that you can use to authenticate. The publ
 
 5. In the section **Add Your SSH Keys**, paste the content of your public key, `udacity_project.pub`:
 
-   ![Add SSH Keys image](https://res.cloudinary.com/sdey96/image/upload/v1527149812/ssh_jhd3zp.png)
 
    This step will automatically create the file `~/.ssh/authorized_keys` with appropriate permissions and add your public key to it. It would also add the following rule in the `/etc/ssh/sshd_config` file automatically:
 
@@ -54,9 +46,7 @@ You now have a public and private key that you can use to authenticate. The publ
    PasswordAuthentication no
    ```
 
-   This rule essentially disables password authentication on the `root` user, and rather enforces SSH logins only.
-
- 6. Click **Create** to create the droplet. This will take some time to complete. After the droplet has been created successfully, a public IP address will be assigned. In this project, the public IPv4 address that I have been assigned is `206.189.151.124`.
+ 6. Click **Create** to create the droplet. This will take some time to complete. After the droplet has been created successfully, a public IP address will be assigned. In this project, the public IPv4 address that I have been assigned is `206.189.46.108`.
 
 ### 3. Logging In as `root` via SSH and Updating the System
 
@@ -65,12 +55,8 @@ You now have a public and private key that you can use to authenticate. The publ
 As the droplet has been successfully created, you can now log into the server as `root` user by running the following command in your host machine:
 
 ```
-  $ ssh root@206.189.46.108.
+  $ ssh root@206.189.46.108
 ```
-
-This will look for the private key in your local machine and log you in automatically if the corresponding public key is found on your server. After you are logged in, you might see something similar to this:
-
-![Root login](https://res.cloudinary.com/sdey96/image/upload/v1527151721/terminal_msihzb.png)
 
 #### 3.2. Updating the System
 
@@ -79,8 +65,6 @@ Run the following command to update the virtual server:
 ```
  # apt update && apt upgrade
 ```
-
-This will update all the packages. If the available update is a kernel update, you might need to reboot the server by running the following command:
 
 ```
 # reboot
@@ -109,10 +93,8 @@ This will update all the packages. If the available update is a kernel update, y
    This will take you back to your host machine. After you are back to your local machine, run:
 
    ```
-   $ ssh root@2206.189.46.108. -p 2200
+   $ ssh root@206.189.46.108 -p 2200
    ```
-   
-   You should now be able to log in to the server as `root` on port 2200. The `-p` option explicitly tells at what port the SSH server operates on. It now no more operates on port number 22. 
 
 ### 5. Configure Timezone to Use UTC
 
@@ -123,9 +105,6 @@ To configure the timezone to use UTC, run the following command:
 ```
 
 It then shows you a list. Choose ``None of the Above`` and press enter. In the next step, choose ``UTC`` and press enter.
-
-
-```
 
 ### 6. Setting Up the Firewall
 
@@ -168,10 +147,11 @@ To                         Action      From
 
 #### 7.1. Creating the User `grader`
 
+While being logged into the virtual server, run the following command and proceed:
+
 ```
   # adduser grader
 ```
-
 
 
 **Note**: Above, the UNIX password I have entered for the user `grader` is, `root`. 
@@ -192,6 +172,7 @@ To allow SSH access to the user `grader`, first log into the account of the user
 # su - grader
 ```
 
+
 Now enter the following commands to allow SSH access to the user `grader`:
 
 ```
@@ -207,7 +188,7 @@ After you have run all the above commands, go back to your local machine and cop
 After that, run `exit`. You would now be back to your local machine. To confirm that it worked, run the following command in your local machine:
 
 ```console
- ssh grader@206.189.46.108. -p 2200
+ssh grader@206.189.46.108-p 2200
 ```
 
 You should now be able to log in as `grader` and would get a prompt to enter commands.
@@ -218,7 +199,7 @@ Next, run `exit` to go back to the host machine and proceed to the following ste
 
 1. Run the following command on your local machine to log in as `root` in the server:
    ```
-   $ ssh root@206.189.46.108. -p 2200
+   $ ssh root@206.189.46.108-p 2200
    ```
 
 2. After you are logged in, open the file `/etc/ssh/sshd_config` with `nano`:
@@ -247,9 +228,11 @@ $ sudo apt update
 $ sudo apt install apache2
 ```
 
-To confirm whether it successfully installed or not, enter the URL `http://206.189.46.108.` in your Web browser:
+To confirm whether it successfully installed or not, enter the URL `http://206.189.46.108` in your Web browser:
 
+If the installation has succeeded, you should see the following Webpage:
 
+![Screenshot](https://res.cloudinary.com/sdey96/image/upload/v1527170572/Capture_seeiof.png)
 
 ### 11. Installing `pip3`
 
@@ -290,7 +273,7 @@ To continue using `git`, you will have to configure a username and an email:
 ```
 $ git config --global user.name "name"
 
-$ git config --global user.email "email"
+$ git config --global user.email "emai"
 ```
 
 ### 13. Installing and Configuring PostgreSQL
@@ -335,7 +318,7 @@ $ git config --global user.email "email"
    $ psql
    ```
 
-3.  Now type the following commands one-by-one:
+3. This will open the `psql` shell. Now type the following commands one-by-one:
 
    ```sql
    postgres=# CREATE DATABASE catalog;
@@ -349,10 +332,17 @@ $ git config --global user.email "email"
 ### 14. Setting Up Apache to Run the Flask Application
 
 #### 14.1. Installing `mod_wsgi`
+
+The module `mod_wsgi` will allow your Python applications to run from Apache server. To install it, run the following command:
    
 ```
 $ sudo apt install libapache2-mod-wsgi-py3
 ```
+
+This would also enable `wsgi`. So, you don't have to enable it manually.
+
+After the installation has succeeded, restart the Apache server:
+
 ```
 $ sudo service apache2 restart
 ```
@@ -372,10 +362,10 @@ $ sudo service apache2 restart
    $ cd FlaskApp/
    ```
 
-3. Clone [this repository](https://github.com/ganavee/itemcatalog/edit/master/README.md) as the directory `FlaskApp`:
+3. Clone [this repository](https://github.com/SDey96/Udacity-Item-Catalog-Project/tree/development) as the directory `FlaskApp`:
 
    ```
-   $ sudo git clone https://github.com/ganavee/itemcatalog FlaskApp
+   $ sudo git clone "yourrepo" FlaskApp
    ```
 
 4. Move inside the newly created directory:
@@ -383,7 +373,6 @@ $ sudo service apache2 restart
    ```
    $ cd FlaskApp/
    ```
-
 
 
 #### 14.3. Installing `virtualenv` and All the Required Packages
@@ -443,7 +432,7 @@ $ sudo service apache2 restart
 
    <VirtualHost *:80>
       ServerName 206.189.46.108
-      ServerAlias 206.189.46.108.xip.io/
+      ServerAlias 206.189.46.108.xip.io
       ServerAdmin contact.ganavijayaram1996@gmail.com
       WSGIDaemonProcess FlaskApp python-path=/var/www \
         python-home=/var/www/FlaskApp/venv
@@ -504,7 +493,7 @@ $ sudo service apache2 restart
    
    Now you should be able to run the application at <http://206.189.46.108.xip.io/>.
    
-   **Note**: You might still see the default Apache page,run the following commands in order:
+   **Note**:If You  still see the default Apache page, run the following commands in order:
    
    ```
    $ sudo a2dissite 000-default.conf
@@ -513,8 +502,8 @@ $ sudo service apache2 restart
 
 ## Debugging
 
-If you are getting an _Internal Server Error_ or any other error(s), make sure to check out Apache's error log for debugging:
 
 ```
 $ sudo cat /var/log/apache2/error.log
 ```
+
