@@ -4,7 +4,7 @@ from flask import request, redirect, url_for, jsonify, flash
 from itertools import zip_longest
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setupwithusers import Base, Category, Item, User
+from .database_setupwithusers import Base, Category, Item, User
 
 from flask import session as login_session
 import random
@@ -19,7 +19,7 @@ from flask import make_response
 import requests
 from functools import wraps
 
-engine = create_engine('sqlite:///itemcatelogwithusers1.db',
+engine = create_engine('postgresql://catalog:password@localhost/catalog',
                        connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 
@@ -27,8 +27,9 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open(APP_ROOT + '/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog with users Application"
 
 
@@ -44,7 +45,8 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(
+            APP_ROOT + '/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
