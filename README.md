@@ -1,7 +1,5 @@
 # Udacity - Linux Server Configuration Project
 
-An Udacity Full Stack Web Developer II Nanodegree Project.
-
 ## About
 
 This tutorial will guide you through the steps to take a baseline installation of a Linux server and prepare it to host your Web applications. It is made for python2.7
@@ -34,13 +32,13 @@ The whole process would look like this:
 
 ```
 Generating public/private rsa key pair.
-Enter file in which to save the key (/c/Users/ANKIT-PC/.ssh/id_rsa): udacity
+Enter file in which to save the key (/c/Users/GANAVI-PC/.ssh/id_rsa): udacity
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 Your identification has been saved in udacity.
 Your public key has been saved in udacity.pub.
 The key fingerprint is:
-SHA256:GgXdnbdJ7h6vfYt0Q9OmhfQN1R7oL8Axu+cn1TSmwgk ANKIT-PC@ANKIT-PC
+SHA256:GgXdnbdJ7h6vfYt0Q9OmhfQN1R7oL8Axu+cn1TSmwgk GANAVI-PC@ANKIT-PC
 The key's randomart image is:
 +---[RSA 2048]----+
 |      .. . . .. o|
@@ -103,7 +101,7 @@ Welcome to Ubuntu 18.04 LTS (GNU/Linux 4.15.0-29-generic x86_64)
 
   System load:  0.0               Processes:           98
   Usage of /:   7.5% of 24.06GB   Users logged in:     0
-  Memory usage: 24%               IP address for eth0: 139.59.26.105
+  Memory usage: 24%               IP address for eth0: 159.65.151.202
   Swap usage:   0%
 
   Get cloud support with Ubuntu Advantage Cloud Guest:
@@ -334,29 +332,7 @@ To                         Action      From
 123/udp (v6)               ALLOW       Anywhere (v6)
 ```
 
-### 10. Configure cron scripts to automatically update packages (Exceeds Specifications)
-
-1. Install unattended-upgrades: ```$ sudo apt-get install unattended-upgrades```.
-2. Enable it by:``` $ sudo dpkg-reconfigure --priority=low unattended-upgrades```.
-
-### 11. Configure firewall to monitor for repeated unsuccessful login attempts and ban attackers (Exceeds Specifications)
-Install fail2ban in order to mitigate brute force attacks by users and bots alike.
-
-1. ```$ sudo apt-get update ```
-2. ```$ sudo apt-get install fail2ban ```
-3. Install the sendmail package to send the alerts to the admin user:``` $ sudo apt-get install sendmail```.
-4. Create a file to safely customize the fail2ban functionality: ```$ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local``` .
-5. Adjust fail2ban configurations:
-
-```
-$ sudo nano /etc/fail2ban/jail.local
-```
-Set the following commands.
-1. Set the destemail: admin user's email address.
-2. Set the bantime: bantime = 1800
-3. Set the action: action = %(action_mwl)s
-
-### 12. Setup to install apache2,mod_wsgi and git
+### 10. Setup to install apache2,mod_wsgi and git
 To install the Apache Web Server, run the following command after logging in as the `grader` user via SSH:
 
 ```
@@ -370,7 +346,7 @@ $ sudo apt-get install git
 
 To confirm whether it successfully installed or not, enter the URL `http://139.59.26.105` in your Web browser:
 
-### 13. Configure Apache to serve a Python mod_wsgi application
+### 11. Configure Apache to serve a Python mod_wsgi application
 Clone the Udacity-item-catalog app from Github
 ```
 $ cd /var/www
@@ -384,7 +360,7 @@ To make .git directory is not publicly accessible via a browser, create a .htacc
 ```
 RedirectMatch 404 /\.git
 ```
-### 14. Install pip , setup virtual environment and also install Flask and its dependencies:
+### 12. Install pip , setup virtual environment and also install Flask and its dependencies:
 
 After activating virtualenv each and ever command should be run under it.
 Install pip , virtualenv (in /var/www/catalog)
@@ -459,7 +435,7 @@ The original NHL Teams app that were developed on local machine needs some tweak
 1. Rename app.py to __init__.py
 2. Update the absolute path of client_secrets.json in __init__.py
 
-### 15. Installing and Configuring PostgreSQL
+### 13. Installing and Configuring PostgreSQL
 
 Install some necessary Python packages for working with PostgreSQL:
 ```
@@ -507,7 +483,7 @@ host    all             all             ::1/128                 md5
 
    Now you should be able to run the application at <http://159.65.151.202.xip.io/>.
 
-### 16 Final updates on Google Login to make the app run on DigitalOcean:
+### 14 Final updates on Google Login to make the app run on DigitalOcean:
 
 To get the Google login working there are a few additional steps:
 
@@ -537,16 +513,7 @@ If you are getting an _Internal Server Error_ or any other error(s), make sure t
 ```
 $ sudo cat /var/log/apache2/error.log
 ```
-### 17. Install system monitor tools (Exceeds Specifications)
-```
-$ sudo apt-get update.
-$ sudo apt-get install glances.
 
-```
-To start this system monitor program:
-```
- $ glances.
-```
 
 ## References
 
