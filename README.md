@@ -368,7 +368,7 @@ Install pip , virtualenv (in /var/www/catalog)
 $ sudo apt-get install python-pip
 $ sudo pip install virtualenv
 $ sudo virtualenv venv
-$ source venv/bin/activate( dont deactivate virtualenv ,followed by this command rest all the commands are under venv and each and every changes or updatation should be done in venv after activating it.)
+$ source venv/bin/activate(Rest of the commands should be excecuted in the virtual environment)
 $ sudo chmod -R 777 venv
 ```
 
@@ -513,7 +513,10 @@ If you are getting an _Internal Server Error_ or any other error(s), make sure t
 ```
 $ sudo cat /var/log/apache2/error.log
 ```
+Make sure  you restart the server when you make any changes to your application.
 
+
+First try creating a simple Flask app and see if the app is working to ensure that your configuration is right, then clone in your repository and start working on it. If there is an error after after cloning then the problem will mostly be with your cloned app.
 
 ## References
 
@@ -523,4 +526,13 @@ $ sudo cat /var/log/apache2/error.log
 
 [3] <https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps>
 
-[4] <https://askubuntu.com/questions/293426/system-monitoring-tools-for-ubuntu>
+[4] <https://askubuntu.com/questions/293426/system-monitoring-tools-for-ubuntu
+
+[5] <https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps>
+
+[6] <https://www.digitalocean.com/community/questions/can-i-create-a-clone-from-a-dropplet>
+
+[7] <http://blog.dscpl.com.au/2014/09/using-python-virtual-environments-with.html>
+
+
+
