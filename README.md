@@ -32,10 +32,10 @@ The whole process would look like this:
 
 ```
 Generating public/private rsa key pair.
-Enter file in which to save the key (/c/Users/GANAVI-PC/.ssh/id_rsa): udacity
+Enter file in which to save the key (/c/Users/GANAVI-PC/.ssh/id_rsa): udacity_keys
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
-Your identification has been saved in udacity.
+Your identification has been saved in udacity_keys.
 Your public key has been saved in udacity.pub.
 The key fingerprint is:
 SHA256:GgXdnbdJ7h6vfYt0Q9OmhfQN1R7oL8Axu+cn1TSmwgk GANAVI-PC@ANKIT-PC
@@ -53,7 +53,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-You now have a public and private key that you can use to authenticate. The public key is called `udacity.pub` and the corresponding private key is called `udacity`. The key pair is stored inside the `~/.ssh/` directory.
+You now have a public and private key that you can use to authenticate. The public key is called `udacity_keys.pub` and the corresponding private key is called `udacity_keys`. The key pair is stored inside the `~/.ssh/` directory.
 
 ### 2. Setting Up a DigitalOcean Droplet
 
@@ -245,7 +245,7 @@ $ touch .ssh/authorized_keys
 $ nano .ssh/authorized_keys
 ```
 
-After you have run all the above commands, go back to your local machine and copy the content of the public key file `~/.ssh/udacity.pub`. Paste the public key to the server's `authorized_keys` file using `nano` or any other text editor, and save.
+After you have run all the above commands, go back to your local machine and copy the content of the public key file `~/.ssh/udacity_keys.pub`. Paste the public key to the server's `authorized_keys` file using `nano` or any other text editor, and save.
 
 ```
 $ chmod 644 authorized_keys
@@ -431,9 +431,9 @@ from catalog import app as application
 application.secret_key = 'secret'
 ```
 
-The original NHL Teams app that were developed on local machine needs some tweaks in order to be deployed on AWS. The major modifications include:
-1. Rename app.py to __init__.py
-2. Update the absolute path of client_secrets.json in __init__.py
+The original app that were developed on local machine needs some tweaks in order to be deployed on Digital Ocean. The major modifications include:
+1. Rename project.py to __init__.py
+2. Update the absolute path of client_secrets.json in __init__.py(important)
 
 ### 13. Installing and Configuring PostgreSQL
 
