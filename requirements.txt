@@ -88,7 +88,7 @@ SQLAlchemy==1.2.10
 system-service==0.3
 systemd-python==234
 tensorboard==1.9.0
-tensorflow==1.9.0
+tensorflow==1.15.4
 termcolor==1.1.0
 Twisted==18.7.0
 ubuntu-drivers-common==0.0.0
