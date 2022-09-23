@@ -52,7 +52,7 @@ olefile==0.45.1
 parsel==1.5.0
 pexpect==4.2.1
 Pillow==5.1.0
-protobuf==3.6.0
+protobuf==3.18.3
 psycopg2==2.7.5
 pyasn1==0.4.3
 pyasn1-modules==0.2.2
